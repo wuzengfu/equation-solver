@@ -1,0 +1,35 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Equation Solver</title>
+    <script defer src="./logic/index.js"></script>
+  </head>
+  <body>
+    <form id="equation_form">
+      <label for="equation_input">Equation: </label>
+      <input type="text" id="equation_input" name="expression" />
+      <input type="submit" value="Calculate" />
+    </form>
+    <div id="history"></div>
+  </body>
+
+  <script>
+    window.onload = () => {
+      const equation_form = document.getElementById("equation_form");
+      const history_list = document.getElementById("history");
+
+      equation_form.addEventListener("submit", (e) => {
+        e.preventDefault();
+        const formData = new FormData(e.target);
+        const { expression } = Object.fromEntries(formData);
+        const answer = execute(expression);
+        const answer_output = document.createElement("p");
+        answer_output.innerText = expression + " = " + answer;
+        history_list.appendChild(answer_output);
+        equation_form.reset();
+      });
+    };
+  </script>
+</html>

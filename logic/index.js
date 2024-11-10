@@ -124,5 +124,3 @@ const execute = (expression) => {
 
   return operandStack.pop();
 };
-
-module.exports = execute;
