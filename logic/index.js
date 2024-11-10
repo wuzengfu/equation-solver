@@ -6,7 +6,27 @@ const preprocess = (expression) => {
   return expression;
 };
 
+const getIndexOfNextPairedBracket = (i, expression) => {
+  let count = 0;
+
+  for (; i < expression.length; i++) {
+    const c = expression[i];
+    if (c == ")") {
+      if (count == 0) {
+        return i;
+      }
+      count--;
+    } else if (c == "(") {
+      count++;
+    }
+  }
+
+  // TODO: Missing bracket exception
+  return -1;
+};
+
 const execute = (expression) => {
+  expression = preprocess(expression);
   let operatorStack = [];
   let operandStack = [];
 
@@ -35,7 +55,7 @@ const execute = (expression) => {
         operatorStack[operatorStack.length - 1] != "("
       ) {
         const num2 = operandStack.pop();
-        const num1 = operandStack.pop();
+        const num1 = operandStack.pop() ?? 0;
         const operator = operatorStack.pop();
         if (operator == "+") {
           operandStack.push(num1 + num2);
@@ -49,10 +69,12 @@ const execute = (expression) => {
       let numString = "";
       i++;
       if (expression[i] == "(") {
-        const indexOfNextRightBracket = expression.indexOf(")", i + 1);
-        numString = execute(
-          expression.substring(i + 1, indexOfNextRightBracket)
+        const indexOfNextRightBracket = getIndexOfNextPairedBracket(
+          i + 1,
+          expression
         );
+        numString =
+          execute(expression.substring(i + 1, indexOfNextRightBracket)) + "";
         i = indexOfNextRightBracket + 1;
       }
       while (
@@ -103,9 +125,4 @@ const execute = (expression) => {
   return operandStack.pop();
 };
 
-const evaluate = (expression) => {
-  expression = preprocess(expression);
-  return execute(expression);
-};
-
-module.exports = evaluate;
+module.exports = execute;
